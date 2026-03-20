@@ -456,20 +456,17 @@
       </div>
 
       <div>
-        <!-- Hidden form for Netlify to detect at build time -->
-        <form name="demande-projet" data-netlify="true" netlify-honeypot="bot-field" hidden>
-          <input type="text" name="name" />
-          <input type="tel" name="phone" />
-          <input type="email" name="email" />
-          <select name="siteType"></select>
-          <select name="budget"></select>
-          <input type="text" name="features" />
-          <textarea name="description"></textarea>
-        </form>
-
-        <form id="requestForm">
+        <!-- ✅ Netlify Forms — method POST + data-netlify = marche garantie -->
+        <form
+          name="demande-projet"
+          method="POST"
+          action="/merci.html"
+          data-netlify="true"
+          data-netlify-honeypot="bot-field"
+        >
           <input type="hidden" name="form-name" value="demande-projet" />
-          <input type="hidden" name="bot-field" style="display:none" />
+          <p style="display:none"><input name="bot-field" /></p>
+
           <div class="form-row">
             <label>Votre Nom <input type="text" name="name" placeholder="Ahmed Benali" required /></label>
             <label>Téléphone / WhatsApp <input type="tel" name="phone" placeholder="+212 6XX XXX XXX" required /></label>
@@ -512,16 +509,10 @@
             Décrivez votre projet
             <textarea name="description" placeholder="Parlez-moi de votre activité, vos objectifs, ce que vous voulez que le site accomplisse..."></textarea>
           </label>
-          <button type="submit" class="btn-submit" id="submitBtn">
+          <button type="submit" class="btn-submit">
             Envoyer Ma Demande →
           </button>
         </form>
-
-        <div id="success-msg">
-          <div class="check">✅</div>
-          <h3>Demande Envoyée !</h3>
-          <p>Je vous contacte sous 24h. Merci pour votre confiance 🙏</p>
-        </div>
       </div>
     </div>
   </section>
@@ -535,39 +526,5 @@
     <a href="/admin.html" class="admin-link">admin →</a>
   </footer>
 
-  <script>
-    const form = document.getElementById('requestForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const successMsg = document.getElementById('success-msg');
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Envoi en cours...';
-
-      try {
-        // Encode all form fields for Netlify Forms
-        const formData = new FormData(form);
-        const encoded = new URLSearchParams(formData).toString();
-
-        const res = await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: encoded,
-        });
-
-        if (res.ok) {
-          form.style.display = 'none';
-          successMsg.style.display = 'block';
-        } else {
-          throw new Error('Netlify form error');
-        }
-      } catch (err) {
-        alert('Erreur lors de l\'envoi. Réessayez ou contactez-nous directement.');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Envoyer Ma Demande →';
-      }
-    });
-  </script>
 </body>
 </html>
