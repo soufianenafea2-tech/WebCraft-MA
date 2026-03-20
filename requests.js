@@ -22,7 +22,7 @@ async function db(method, filter = '', body = null) {
   return text ? JSON.parse(text) : null;
 }
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE,OPTIONS');
@@ -30,6 +30,11 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
 
   const { id } = req.query;
+
+  // Check env vars
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    return res.status(500).json({ error: 'Variables SUPABASE_URL et SUPABASE_KEY manquantes dans Vercel → Settings → Environment Variables' });
+  }
 
   try {
     // ── GET — toutes les demandes ──────────────────────────
