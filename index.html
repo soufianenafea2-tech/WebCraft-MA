@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebCraft MA — Sites Web Professionnels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080b10;
+      --surface: #0f1318;
+      --border: #1e2530;
+      --accent: #e8c44a;
+      --accent2: #3b82f6;
+      --text: #e8ecf0;
+      --muted: #6b7a8d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ---- NOISE OVERLAY ---- */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 999;
+    }
+
+    /* ---- NAV ---- */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 5%;
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0;
+      background: rgba(8,11,16,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      color: var(--accent);
+    }
+    .logo span { color: var(--text); }
+    nav a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.875rem; letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--accent); }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .btn-nav {
+      background: var(--accent); color: #080b10 !important;
+      padding: 0.5rem 1.2rem; border-radius: 4px;
+      font-weight: 600; font-size: 0.8rem !important;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+
+    /* ---- HERO ---- */
+    .hero {
+      min-height: 88vh;
+      display: flex; align-items: center;
+      padding: 6rem 5% 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-glow {
+      position: absolute; top: -200px; right: -200px;
+      width: 700px; height: 700px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(59,130,246,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-glow2 {
+      position: absolute; bottom: -300px; left: -100px;
+      width: 600px; height: 600px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(232,196,74,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-content { max-width: 700px; position: relative; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 0.4rem 1rem; border-radius: 100px;
+      font-size: 0.8rem; color: var(--muted); margin-bottom: 2rem;
+    }
+    .hero-badge::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #22c55e; display: inline-block;
+      box-shadow: 0 0 6px #22c55e;
+    }
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      line-height: 0.95;
+      letter-spacing: 2px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 .line-accent { color: var(--accent); display: block; }
+    .hero p {
+      font-size: 1.1rem; color: var(--muted);
+      line-height: 1.7; max-width: 500px;
+      margin-bottom: 2.5rem;
+    }
+    .hero-cta {
+      display: flex; gap: 1rem; flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--accent); color: #080b10;
+      padding: 0.9rem 2rem; border-radius: 4px;
+      font-weight: 700; font-size: 0.9rem;
+      text-transform: uppercase; letter-spacing: 1px;
+      text-decoration: none; transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-primary:hover { background: #f0d060; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      padding: 0.9rem 2rem; border-radius: 4px;
+      font-weight: 500; font-size: 0.9rem;
+      text-decoration: none; border: 1px solid var(--border);
+      transition: all 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .btn-secondary:hover { border-color: var(--muted); }
+
+    /* ---- STATS ---- */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .stat {
+      padding: 2rem 5%;
+      border-right: 1px solid var(--border);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem; color: var(--accent); letter-spacing: 2px;
+    }
+    .stat-label { color: var(--muted); font-size: 0.875rem; margin-top: 0.25rem; }
+
+    /* ---- SERVICES ---- */
+    .section { padding: 6rem 5%; }
+    .section-label {
+      display: flex; align-items: center; gap: 1rem;
+      color: var(--accent); font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 3px;
+      margin-bottom: 1rem;
+    }
+    .section-label::after {
+      content: ''; flex: 1; max-width: 60px;
+      height: 1px; background: var(--accent);
+    }
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      letter-spacing: 2px; margin-bottom: 3rem;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+    .service-card {
+      background: var(--surface);
+      padding: 2.5rem;
+      transition: background 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .service-card:hover { background: #131820; }
+    .service-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      height: 2px; width: 0;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+    .service-card:hover::before { width: 100%; }
+    .service-icon {
+      font-size: 2rem; margin-bottom: 1.5rem;
+    }
+    .service-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem; letter-spacing: 1px;
+      margin-bottom: 0.75rem;
+    }
+    .service-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+    .service-price {
+      margin-top: 1.5rem; padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem; color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    /* ---- FORM ---- */
+    #form-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .form-wrapper {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem; align-items: start;
+    }
+    .form-info h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: 2px; line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .form-info p { color: var(--muted); line-height: 1.7; margin-bottom: 2rem; }
+    .step-list { display: flex; flex-direction: column; gap: 1.25rem; }
+    .step {
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .step-num {
+      width: 32px; height: 32px; flex-shrink: 0;
+      background: var(--accent); color: #080b10;
+      border-radius: 50%; display: grid; place-items: center;
+      font-weight: 700; font-size: 0.8rem;
+    }
+    .step-text strong { display: block; margin-bottom: 0.2rem; }
+    .step-text span { color: var(--muted); font-size: 0.875rem; }
+
+    form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    label {
+      display: flex; flex-direction: column; gap: 0.5rem;
+      font-size: 0.8rem; text-transform: uppercase;
+      letter-spacing: 1px; color: var(--muted);
+    }
+    input, select, textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.9rem 1rem;
+      border-radius: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232,196,74,0.1);
+    }
+    select option { background: var(--bg); }
+    textarea { resize: vertical; min-height: 120px; }
+    .checkbox-group {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.75rem; margin-top: 0.25rem;
+    }
+    .checkbox-item {
+      display: flex; align-items: center; gap: 0.5rem;
+      cursor: pointer; padding: 0.5rem;
+      border: 1px solid var(--border); border-radius: 4px;
+      font-size: 0.875rem; color: var(--text);
+      text-transform: none; letter-spacing: 0;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .checkbox-item:has(input:checked) {
+      border-color: var(--accent);
+      background: rgba(232,196,74,0.05);
+    }
+    .checkbox-item input[type="checkbox"] {
+      width: 16px; height: 16px; padding: 0;
+      accent-color: var(--accent);
+    }
+    .btn-submit {
+      background: var(--accent); color: #080b10;
+      padding: 1rem 2rem; border: none;
+      border-radius: 4px; font-weight: 700;
+      font-size: 1rem; text-transform: uppercase;
+      letter-spacing: 1px; cursor: pointer;
+      transition: all 0.2s; width: 100%;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-submit:hover:not(:disabled) { background: #f0d060; transform: translateY(-1px); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ---- SUCCESS MESSAGE ---- */
+    #success-msg {
+      display: none;
+      text-align: center; padding: 3rem;
+      background: rgba(34,197,94,0.05);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 8px;
+    }
+    #success-msg .check { font-size: 3rem; margin-bottom: 1rem; }
+    #success-msg h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem; letter-spacing: 1px;
+      color: #22c55e; margin-bottom: 0.5rem;
+    }
+    #success-msg p { color: var(--muted); }
+
+    /* ---- FOOTER ---- */
+    footer {
+      padding: 2.5rem 5%;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    footer p { color: var(--muted); font-size: 0.875rem; }
+    .admin-link {
+      color: var(--muted); font-size: 0.8rem;
+      text-decoration: none; opacity: 0.4;
+      transition: opacity 0.2s;
+    }
+    .admin-link:hover { opacity: 1; }
+
+    /* ---- ANIMATIONS ---- */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-content > * {
+      opacity: 0; animation: fadeUp 0.6s forwards;
+    }
+    .hero-badge { animation-delay: 0.1s; }
+    .hero h1 { animation-delay: 0.2s; }
+    .hero p { animation-delay: 0.35s; }
+    .hero-cta { animation-delay: 0.5s; }
+
+    @media (max-width: 768px) {
+      .form-wrapper { grid-template-columns: 1fr; gap: 3rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .stats-bar { grid-template-columns: 1fr; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .nav-links { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">Web<span>Craft</span> <span style="color:var(--muted); font-size:0.9rem;">MA</span></div>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#form-section" class="btn-nav">Demande →</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-glow2"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Disponible pour de nouveaux projets</div>
+      <h1>
+        Sites Web
+        <span class="line-accent">Qui Vendent.</span>
+      </h1>
+      <p>
+        Du design sur-mesure au développement complet — je crée des sites web professionnels pour les entreprises marocaines qui veulent se démarquer en ligne.
+      </p>
+      <div class="hero-cta">
+        <a href="#form-section" class="btn-primary">Demander un Devis →</a>
+        <a href="#services" class="btn-secondary">Voir les services</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Sites livrés</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3–7</div>
+      <div class="stat-label">Jours de livraison</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Satisfaction client</div>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <section class="section" id="services">
+    <div class="section-label">Ce que je fais</div>
+    <h2 class="section-title">Mes Services</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon">🎨</div>
+        <h3>Site Vitrine</h3>
+        <p>Présence en ligne professionnelle pour votre entreprise. Design moderne, responsive, et optimisé pour convertir les visiteurs en clients.</p>
+        <div class="service-price">À partir de 1 500 MAD</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🛒</div>
+        <h3>Boutique E-commerce</h3>
+        <p>Vendez en ligne 24h/24. Catalogue produits, panier, paiement sécurisé et gestion des commandes intégrée.</p>
+        <div class="service-price">À partir de 4 000 MAD</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">⚡</div>
+        <h3>Landing Page</h3>
+        <p>Une page percutante pour votre campagne, produit ou service. Optimisée pour la conversion et la vitesse.</p>
+        <div class="service-price">À partir de 800 MAD</div>
+      </div>
+      <div class="service-card">
+        <div class="service-icon">🔧</div>
+        <h3>Application Web</h3>
+        <p>Dashboard, outil métier, système de gestion — je développe des applications web sur mesure adaptées à vos besoins.</p>
+        <div class="service-price">Sur devis</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="section" id="form-section">
+    <div class="form-wrapper">
+      <div class="form-info">
+        <div class="section-label">Commencer</div>
+        <h2>Décrivez Votre Projet</h2>
+        <p>Remplissez ce formulaire et je vous réponds sous <strong>24h</strong> avec un devis personnalisé.</p>
+        <div class="step-list">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-text">
+              <strong>Vous envoyez le formulaire</strong>
+              <span>2 minutes suffisent</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-text">
+              <strong>Je vous contacte sous 24h</strong>
+              <span>Par WhatsApp ou email</span>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-text">
+              <strong>On démarre le projet</strong>
+              <span>Livraison en 3–7 jours</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <form id="requestForm">
+          <div class="form-row">
+            <label>Votre Nom <input type="text" name="name" placeholder="Ahmed taouil" required /></label>
+            <label>Téléphone / WhatsApp <input type="tel" name="phone" placeholder="+212 6XX XXX XXX" required /></label>
+          </div>
+          <label>Email <input type="email" name="email" placeholder="ahmed@email.com" required /></label>
+          <label>
+            Type de Site
+            <select name="siteType" required>
+              <option value="">-- Choisissez --</option>
+              <option value="vitrine">Site Vitrine</option>
+              <option value="ecommerce">Boutique E-commerce</option>
+              <option value="landing">Landing Page</option>
+              <option value="webapp">Application Web</option>
+              <option value="autre">Autre</option>
+            </select>
+          </label>
+          <label>
+            Budget estimé
+            <select name="budget">
+              <option value="">-- Choisissez --</option>
+              <option value="<1500">Moins de 1 500 MAD</option>
+              <option value="1500-3000">1 500 – 3 000 MAD</option>
+              <option value="3000-6000">3 000 – 6 000 MAD</option>
+              <option value=">6000">Plus de 6 000 MAD</option>
+              <option value="nsp">Je ne sais pas encore</option>
+            </select>
+          </label>
+          <label>
+            Fonctionnalités souhaitées
+            <div class="checkbox-group">
+              <label class="checkbox-item"><input type="checkbox" name="features" value="multilangue" /> 🌍 Multilingue</label>
+              <label class="checkbox-item"><input type="checkbox" name="features" value="blog" /> 📝 Blog</label>
+              <label class="checkbox-item"><input type="checkbox" name="features" value="contact" /> 📧 Formulaire contact</label>
+              <label class="checkbox-item"><input type="checkbox" name="features" value="seo" /> 🔍 SEO</label>
+              <label class="checkbox-item"><input type="checkbox" name="features" value="admin" /> 🔧 Panel admin</label>
+              <label class="checkbox-item"><input type="checkbox" name="features" value="paiement" /> 💳 Paiement en ligne</label>
+            </div>
+          </label>
+          <label>
+            Décrivez votre projet
+            <textarea name="description" placeholder="Parlez-moi de votre activité, vos objectifs, ce que vous voulez que le site accomplisse..."></textarea>
+          </label>
+          <button type="submit" class="btn-submit" id="submitBtn">
+            Envoyer Ma Demande →
+          </button>
+        </form>
+
+        <div id="success-msg">
+          <div class="check">✅</div>
+          <h3>Demande Envoyée !</h3>
+          <p>Je vous contacte sous 24h. Merci pour votre confiance 🙏</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p style="font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:2px;">
+      WEBCRAFT <span style="color:var(--accent)">MA</span>
+    </p>
+    <p>© 2025 — Tous droits réservés</p>
+    <a href="/admin.html" class="admin-link">admin →</a>
+  </footer>
+
+  <script>
+    const form = document.getElementById('requestForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const successMsg = document.getElementById('success-msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Envoi en cours...';
+
+      const features = [...form.querySelectorAll('input[name="features"]:checked')]
+        .map(cb => cb.value);
+
+      const data = {
+        name: form.name.value,
+        phone: form.phone.value,
+        email: form.email.value,
+        siteType: form.siteType.value,
+        budget: form.budget.value,
+        features,
+        description: form.description.value,
+      };
+
+      try {
+        const res = await fetch('/api/requests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+
+        if (res.ok) {
+          form.style.display = 'none';
+          successMsg.style.display = 'block';
+        } else {
+          throw new Error('Server error');
+        }
+      } catch (err) {
+        alert('Erreur lors de l\'envoi. Vérifiez que le serveur est démarré.');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Envoyer Ma Demande →';
+      }
+    });
+  </script>
+</body>
+</html>

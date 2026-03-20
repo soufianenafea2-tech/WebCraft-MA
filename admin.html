@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — WebCraft MA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080b10; --surface: #0f1318;
+      --border: #1e2530; --accent: #e8c44a;
+      --text: #e8ecf0; --muted: #6b7a8d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
+
+    /* LOGIN GATE */
+    #login-screen {
+      min-height: 100vh; display: flex;
+      align-items: center; justify-content: center;
+    }
+    .login-box {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 3rem; border-radius: 8px; width: 380px; text-align: center;
+    }
+    .login-box h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem; letter-spacing: 2px;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .login-box p { color: var(--muted); font-size: 0.875rem; margin-bottom: 2rem; }
+    .login-box input {
+      width: 100%; background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 0.9rem 1rem; border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 1rem;
+      margin-bottom: 1rem; outline: none;
+    }
+    .login-box input:focus { border-color: var(--accent); }
+    .login-box button {
+      width: 100%; background: var(--accent); color: #080b10;
+      border: none; padding: 0.9rem; border-radius: 4px;
+      font-weight: 700; font-size: 0.9rem; text-transform: uppercase;
+      letter-spacing: 1px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    }
+    .login-error { color: #ef4444; font-size: 0.8rem; margin-top: 0.75rem; display: none; }
+
+    /* ADMIN PANEL */
+    #admin-panel { display: none; }
+
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.5rem 2rem; border-bottom: 1px solid var(--border);
+      background: var(--surface); position: sticky; top: 0; z-index: 10;
+    }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem; letter-spacing: 2px; color: var(--accent);
+    }
+    .header-right { display: flex; gap: 1rem; align-items: center; }
+    .badge-live {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.75rem; color: #22c55e;
+    }
+    .badge-live::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: #22c55e; animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    .btn-logout {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border); padding: 0.4rem 1rem;
+      border-radius: 4px; cursor: pointer; font-size: 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-logout:hover { color: #ef4444; border-color: #ef4444; }
+
+    main { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+
+    /* STATS */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: var(--surface); border: 1px solid var(--border);
+      padding: 1.5rem; border-radius: 6px;
+    }
+    .stat-card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 0.5rem; }
+    .stat-card .value {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem; letter-spacing: 1px; color: var(--accent);
+    }
+
+    /* FILTERS */
+    .filters {
+      display: flex; gap: 1rem; margin-bottom: 1.5rem;
+      flex-wrap: wrap; align-items: center;
+    }
+    .filter-btn {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--muted); padding: 0.4rem 1rem;
+      border-radius: 100px; cursor: pointer;
+      font-size: 0.8rem; font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      border-color: var(--accent); color: var(--accent);
+    }
+    .search-input {
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 0.4rem 1rem;
+      border-radius: 4px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem; outline: none; margin-left: auto;
+    }
+    .search-input:focus { border-color: var(--accent); }
+
+    /* TABLE */
+    .table-wrap {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 6px; overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: #131820; }
+    th {
+      padding: 1rem 1.25rem; text-align: left;
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 1.5px; color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(30,37,48,0.5);
+      font-size: 0.875rem; vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255,255,255,0.015); }
+
+    .type-badge {
+      display: inline-block; padding: 0.2rem 0.6rem;
+      border-radius: 4px; font-size: 0.75rem; font-weight: 600;
+      background: rgba(59,130,246,0.1); color: #60a5fa;
+      border: 1px solid rgba(59,130,246,0.2);
+    }
+    .type-badge.ecommerce { background: rgba(168,85,247,0.1); color: #c084fc; border-color: rgba(168,85,247,0.2); }
+    .type-badge.vitrine { background: rgba(59,130,246,0.1); color: #60a5fa; border-color: rgba(59,130,246,0.2); }
+    .type-badge.landing { background: rgba(34,197,94,0.1); color: #4ade80; border-color: rgba(34,197,94,0.2); }
+    .type-badge.webapp { background: rgba(251,146,60,0.1); color: #fb923c; border-color: rgba(251,146,60,0.2); }
+
+    .status-select {
+      background: var(--bg); border: 1px solid var(--border);
+      color: var(--text); padding: 0.3rem 0.6rem;
+      border-radius: 4px; font-size: 0.8rem;
+      font-family: 'DM Sans', sans-serif; cursor: pointer;
+    }
+    .contact-info { display: flex; flex-direction: column; gap: 0.2rem; }
+    .contact-info small { color: var(--muted); font-size: 0.8rem; }
+    .features-list { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .feat-tag {
+      background: rgba(232,196,74,0.08); color: var(--accent);
+      padding: 0.15rem 0.5rem; border-radius: 3px;
+      font-size: 0.7rem; border: 1px solid rgba(232,196,74,0.15);
+    }
+    .desc-text {
+      max-width: 250px; color: var(--muted);
+      white-space: nowrap; overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .date-text { color: var(--muted); font-size: 0.8rem; white-space: nowrap; }
+
+    .btn-delete {
+      background: transparent; border: 1px solid rgba(239,68,68,0.2);
+      color: rgba(239,68,68,0.6); padding: 0.3rem 0.6rem;
+      border-radius: 4px; cursor: pointer; font-size: 0.75rem;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .btn-delete:hover { border-color: #ef4444; color: #ef4444; }
+
+    /* EMPTY STATE */
+    .empty {
+      text-align: center; padding: 5rem 2rem;
+      color: var(--muted);
+    }
+    .empty .icon { font-size: 3rem; margin-bottom: 1rem; }
+
+    @media (max-width: 768px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      th:nth-child(n+5), td:nth-child(n+5) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="login-screen">
+    <div class="login-box">
+      <h1>Admin Panel</h1>
+      <p>WebCraft MA — Espace administrateur</p>
+      <input type="password" id="pwd-input" placeholder="Mot de passe" />
+      <button onclick="login()">Connexion</button>
+      <div class="login-error" id="login-error">Mot de passe incorrect</div>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="admin-panel">
+    <header>
+      <div class="logo">Admin — WebCraft MA</div>
+      <div class="header-right">
+        <div class="badge-live">Connecté</div>
+        <button class="btn-logout" onclick="logout()">Déconnexion</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- STATS -->
+      <div class="stats">
+        <div class="stat-card">
+          <div class="label">Total Demandes</div>
+          <div class="value" id="stat-total">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">En Attente</div>
+          <div class="value" id="stat-pending" style="color:#f59e0b">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">En Cours</div>
+          <div class="value" id="stat-progress" style="color:#3b82f6">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Terminés</div>
+          <div class="value" id="stat-done" style="color:#22c55e">0</div>
+        </div>
+      </div>
+
+      <!-- FILTERS -->
+      <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('all', this)">Tous</button>
+        <button class="filter-btn" onclick="setFilter('nouveau', this)">Nouveau</button>
+        <button class="filter-btn" onclick="setFilter('en_cours', this)">En cours</button>
+        <button class="filter-btn" onclick="setFilter('termine', this)">Terminé</button>
+        <input class="search-input" type="text" placeholder="🔍  Rechercher..." oninput="renderTable()" id="search-input" />
+      </div>
+
+      <!-- TABLE -->
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Client</th>
+              <th>Type</th>
+              <th>Budget</th>
+              <th>Features</th>
+              <th>Description</th>
+              <th>Date</th>
+              <th>Statut</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="requests-tbody"></tbody>
+        </table>
+        <div class="empty" id="empty-state" style="display:none">
+          <div class="icon">📭</div>
+          <p>Aucune demande pour le moment.</p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const ADMIN_PASSWORD = 'admin123'; // ← Changez ce mot de passe!
+    let allRequests = [];
+    let currentFilter = 'all';
+
+    // ---- AUTH ----
+    function login() {
+      const pwd = document.getElementById('pwd-input').value;
+      if (pwd === ADMIN_PASSWORD) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'block';
+        loadRequests();
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+      }
+    }
+    document.getElementById('pwd-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') login();
+    });
+    function logout() {
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('admin-panel').style.display = 'none';
+      document.getElementById('pwd-input').value = '';
+    }
+
+    // ---- LOAD DATA ----
+    async function loadRequests() {
+      try {
+        const res = await fetch('/api/requests');
+        allRequests = await res.json();
+        updateStats();
+        renderTable();
+      } catch {
+        allRequests = [];
+        renderTable();
+      }
+    }
+
+    // ---- STATS ----
+    function updateStats() {
+      document.getElementById('stat-total').textContent = allRequests.length;
+      document.getElementById('stat-pending').textContent =
+        allRequests.filter(r => r.status === 'nouveau' || !r.status).length;
+      document.getElementById('stat-progress').textContent =
+        allRequests.filter(r => r.status === 'en_cours').length;
+      document.getElementById('stat-done').textContent =
+        allRequests.filter(r => r.status === 'termine').length;
+    }
+
+    // ---- FILTER ----
+    function setFilter(f, btn) {
+      currentFilter = f;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderTable();
+    }
+
+    // ---- RENDER ----
+    function renderTable() {
+      const search = document.getElementById('search-input').value.toLowerCase();
+      const tbody = document.getElementById('requests-tbody');
+      let data = allRequests.filter(r => {
+        if (currentFilter !== 'all' && (r.status || 'nouveau') !== currentFilter) return false;
+        if (search && !JSON.stringify(r).toLowerCase().includes(search)) return false;
+        return true;
+      });
+
+      document.getElementById('empty-state').style.display = data.length ? 'none' : 'block';
+
+      tbody.innerHTML = data.map((r, i) => `
+        <tr id="row-${r.id}">
+          <td style="color:var(--muted);font-size:0.8rem">${allRequests.indexOf(r) + 1}</td>
+          <td>
+            <div class="contact-info">
+              <strong>${r.name}</strong>
+              <small>📞 ${r.phone}</small>
+              <small>✉️ ${r.email}</small>
+            </div>
+          </td>
+          <td><span class="type-badge ${r.siteType}">${r.siteType || '—'}</span></td>
+          <td style="white-space:nowrap">${r.budget || '—'}</td>
+          <td>
+            <div class="features-list">
+              ${(r.features || []).map(f => `<span class="feat-tag">${f}</span>`).join('') || '<span style="color:var(--muted)">—</span>'}
+            </div>
+          </td>
+          <td><div class="desc-text" title="${r.description}">${r.description || '—'}</div></td>
+          <td><div class="date-text">${formatDate(r.createdAt)}</div></td>
+          <td>
+            <select class="status-select" onchange="updateStatus('${r.id}', this.value)">
+              <option value="nouveau" ${(r.status||'nouveau')==='nouveau'?'selected':''}>🟡 Nouveau</option>
+              <option value="en_cours" ${r.status==='en_cours'?'selected':''}>🔵 En cours</option>
+              <option value="termine" ${r.status==='termine'?'selected':''}>🟢 Terminé</option>
+              <option value="annule" ${r.status==='annule'?'selected':''}>🔴 Annulé</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn-delete" onclick="deleteRequest('${r.id}')">✕</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleDateString('fr-MA', { day:'2-digit', month:'short', year:'numeric' })
+        + '<br>' + d.toLocaleTimeString('fr-MA', { hour:'2-digit', minute:'2-digit' });
+    }
+
+    // ---- UPDATE STATUS ----
+    async function updateStatus(id, status) {
+      await fetch(`/api/requests/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status }),
+      });
+      const req = allRequests.find(r => r.id === id);
+      if (req) req.status = status;
+      updateStats();
+    }
+
+    // ---- DELETE ----
+    async function deleteRequest(id) {
+      if (!confirm('Supprimer cette demande ?')) return;
+      await fetch(`/api/requests/${id}`, { method: 'DELETE' });
+      allRequests = allRequests.filter(r => r.id !== id);
+      updateStats();
+      renderTable();
+    }
+
+    // Auto-refresh every 30s
+    setInterval(() => {
+      if (document.getElementById('admin-panel').style.display !== 'none') {
+        loadRequests();
+      }
+    }, 30000);
+  </script>
+</body>
+</html>
