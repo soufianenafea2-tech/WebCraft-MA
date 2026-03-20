@@ -499,9 +499,7 @@
             Décrivez votre projet
             <textarea name="description" placeholder="Parlez-moi de votre activité, vos objectifs, ce que vous voulez que le site accomplisse..."></textarea>
           </label>
-          <button type="submit" class="btn-submit" id="submitBtn">
-            Envoyer Ma Demande →
-          </button>
+          <button type="submit" class="btn-submit" id="submitBtn">Envoyer Ma Demande →</button>
         </form>
 
         <div id="success-msg">
@@ -509,7 +507,12 @@
           <h3>Demande Envoyée !</h3>
           <p>Je vous contacte sous 24h. Merci pour votre confiance 🙏</p>
         </div>
-      </div>
+
+        <div id="success-msg">
+          <div class="check">✅</div>
+          <h3>Demande Envoyée !</h3>
+          <p>Je vous contacte sous 24h. Merci pour votre confiance 🙏</p>
+        </div>
   </section>
 
   <!-- FOOTER -->
@@ -532,16 +535,11 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Envoi en cours...';
 
-      const features = [...form.querySelectorAll('input[name="features"]:checked')]
-        .map(cb => cb.value);
-
+      const features = [...form.querySelectorAll('input[name="features"]:checked')].map(c => c.value);
       const data = {
-        name: form.name.value,
-        phone: form.phone.value,
-        email: form.email.value,
-        siteType: form.siteType.value,
-        budget: form.budget.value,
-        features,
+        name: form.name.value, phone: form.phone.value,
+        email: form.email.value, siteType: form.siteType.value,
+        budget: form.budget.value, features,
         description: form.description.value,
       };
 
@@ -554,15 +552,12 @@
         if (res.ok) {
           form.style.display = 'none';
           successMsg.style.display = 'block';
-        } else {
-          throw new Error('Erreur serveur');
-        }
-      } catch (err) {
-        alert('Erreur lors de l'envoi. Vérifiez que le serveur est démarré.');
+        } else throw new Error();
+      } catch {
+        alert("Erreur lors de l'envoi. Réessayez.");
         submitBtn.disabled = false;
         submitBtn.textContent = 'Envoyer Ma Demande →';
       }
     });
   </script>
 </body>
-</html>

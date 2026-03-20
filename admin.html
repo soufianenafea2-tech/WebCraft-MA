@@ -3,200 +3,129 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WebCraft MA — Dashboard</title>
+  <title>Admin — WebCraft MA</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #080b10; --surface: #0f1318; --surface2: #131820;
-      --border: #1e2530; --accent: #e8c44a; --text: #e8ecf0; --muted: #6b7a8d;
+      --bg:#080b10; --surface:#0f1318; --surface2:#131820;
+      --border:#1e2530; --accent:#e8c44a; --text:#e8ecf0; --muted:#6b7a8d;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-    /* ── LOGIN ── */
-    #login-screen { min-height:100vh; display:flex; align-items:center; justify-content:center; }
-    .login-box {
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 8px; padding: 3rem; width: 360px; text-align: center;
-    }
-    .login-box h1 {
-      font-family:'Bebas Neue',sans-serif; font-size:2rem;
-      letter-spacing:3px; color:var(--accent); margin-bottom:0.25rem;
-    }
-    .login-box p { color:var(--muted); font-size:0.875rem; margin-bottom:2rem; }
-    .login-box input {
-      width:100%; background:var(--bg); border:1px solid var(--border);
-      color:var(--text); padding:0.85rem 1rem; border-radius:4px;
-      font-family:'DM Sans',sans-serif; font-size:0.95rem; outline:none;
-      margin-bottom:1rem;
-    }
-    .login-box input:focus { border-color:var(--accent); }
-    .login-box button {
-      width:100%; background:var(--accent); color:#080b10; border:none;
-      padding:0.9rem; border-radius:4px; font-weight:700; font-size:0.9rem;
-      text-transform:uppercase; letter-spacing:1px; cursor:pointer;
-      font-family:'DM Sans',sans-serif;
-    }
-    .login-err { color:#ef4444; font-size:0.8rem; margin-top:0.75rem; display:none; }
+    /* LOGIN */
+    #login{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+    .login-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:3rem;width:340px;text-align:center;}
+    .login-box h1{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;color:var(--accent);margin-bottom:.25rem;}
+    .login-box p{color:var(--muted);font-size:.875rem;margin-bottom:2rem;}
+    .login-box input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:.85rem 1rem;border-radius:4px;font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;margin-bottom:1rem;}
+    .login-box input:focus{border-color:var(--accent);}
+    .login-box button{width:100%;background:var(--accent);color:#080b10;border:none;padding:.9rem;border-radius:4px;font-weight:700;font-size:.9rem;text-transform:uppercase;letter-spacing:1px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+    .err{color:#ef4444;font-size:.8rem;margin-top:.75rem;display:none;}
 
-    /* ── LAYOUT ── */
-    #dashboard { display:none; }
-    .sidebar {
-      position:fixed; top:0; left:0; width:220px; height:100vh;
-      background:var(--surface); border-right:1px solid var(--border);
-      padding:1.5rem 1rem; display:flex; flex-direction:column; gap:6px;
-    }
-    .sidebar-logo {
-      font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:3px;
-      color:var(--accent); padding:0 8px 1.25rem;
-      border-bottom:1px solid var(--border); margin-bottom:8px;
-    }
-    .nav-item {
-      display:flex; align-items:center; gap:10px; padding:9px 12px;
-      border-radius:5px; cursor:pointer; font-size:0.875rem; color:var(--muted);
-      transition:all 0.2s; text-decoration:none;
-    }
-    .nav-item:hover, .nav-item.active {
-      background:rgba(232,196,74,0.08); color:var(--text);
-    }
-    .nav-item.active { border-left:3px solid var(--accent); }
-    .nav-bottom { margin-top:auto; }
-    .btn-logout {
-      width:100%; background:transparent; border:1px solid var(--border);
-      color:var(--muted); padding:0.5rem; border-radius:4px; cursor:pointer;
-      font-size:0.8rem; font-family:'DM Sans',sans-serif; transition:all 0.2s;
-    }
-    .btn-logout:hover { border-color:#ef4444; color:#ef4444; }
+    /* LAYOUT */
+    #dash{display:none;}
+    .sidebar{position:fixed;top:0;left:0;width:210px;height:100vh;background:var(--surface);border-right:1px solid var(--border);padding:1.5rem 1rem;display:flex;flex-direction:column;gap:6px;}
+    .logo{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;color:var(--accent);padding:0 8px 1.25rem;border-bottom:1px solid var(--border);margin-bottom:8px;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:5px;font-size:.875rem;color:var(--muted);transition:all .2s;text-decoration:none;}
+    .nav-item:hover,.nav-item.active{background:rgba(232,196,74,.08);color:var(--text);}
+    .nav-item.active{border-left:3px solid var(--accent);}
+    .nav-bottom{margin-top:auto;}
+    .btn-out{width:100%;background:transparent;border:1px solid var(--border);color:var(--muted);padding:.5rem;border-radius:4px;cursor:pointer;font-size:.8rem;font-family:'DM Sans',sans-serif;transition:all .2s;}
+    .btn-out:hover{border-color:#ef4444;color:#ef4444;}
+    .main{margin-left:210px;padding:2rem;}
 
-    .main { margin-left:220px; padding:2rem; }
+    /* TOPBAR */
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;}
+    .topbar h1{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;}
+    .topbar-actions{display:flex;gap:.75rem;}
+    .btn{padding:.5rem 1.25rem;border-radius:4px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.825rem;font-weight:600;transition:all .2s;}
+    .btn-ac{background:var(--accent);color:#080b10;}
+    .btn-ac:hover{background:#f0d060;}
+    .btn-gh{background:transparent;color:var(--muted);border:1px solid var(--border);}
+    .btn-gh:hover{border-color:var(--accent);color:var(--text);}
 
-    /* ── TOPBAR ── */
-    .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; }
-    .topbar h1 { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; letter-spacing:2px; }
-    .topbar-actions { display:flex; gap:0.75rem; }
-    .btn {
-      padding:0.5rem 1.25rem; border-radius:4px; border:none; cursor:pointer;
-      font-family:'DM Sans',sans-serif; font-size:0.825rem; font-weight:600;
-      transition:all 0.2s;
-    }
-    .btn-accent { background:var(--accent); color:#080b10; }
-    .btn-accent:hover { background:#f0d060; }
-    .btn-ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
-    .btn-ghost:hover { border-color:var(--accent); color:var(--text); }
+    /* STATS */
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+    .sc{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1.25rem;}
+    .sc .sl{font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:.5rem;}
+    .sc .sv{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:1px;}
+    .sc .ss{font-size:.75rem;color:var(--muted);margin-top:2px;}
 
-    /* ── STATS ── */
-    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:2rem; }
-    .stat-card { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:1.25rem; }
-    .stat-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:0.5rem; }
-    .stat-value { font-family:'Bebas Neue',sans-serif; font-size:2.5rem; letter-spacing:1px; }
-    .stat-sub { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+    /* TABLE */
+    .tc{background:var(--surface);border:1px solid var(--border);border-radius:6px;overflow:hidden;}
+    .tt{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+    .tt h2{font-size:1rem;font-weight:600;}
+    .search{background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:.5rem 1rem;color:var(--text);font-family:'DM Sans',sans-serif;font-size:.875rem;outline:none;width:240px;}
+    .search:focus{border-color:var(--accent);}
+    .fr{display:flex;gap:.5rem;padding:.75rem 1.25rem;border-bottom:1px solid var(--border);}
+    .fb{padding:4px 14px;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:.78rem;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+    .fb.active{background:rgba(232,196,74,.1);border-color:rgba(232,196,74,.4);color:var(--accent);}
+    table{width:100%;border-collapse:collapse;}
+    th{padding:.75rem 1rem;text-align:left;font-size:.7rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);border-bottom:1px solid var(--border);}
+    td{padding:.9rem 1rem;font-size:.875rem;border-bottom:1px solid rgba(30,37,48,.5);vertical-align:middle;}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:rgba(255,255,255,.015);}
 
-    /* ── TABLE ── */
-    .table-card { background:var(--surface); border:1px solid var(--border); border-radius:6px; overflow:hidden; }
-    .table-top {
-      padding:1rem 1.25rem; border-bottom:1px solid var(--border);
-      display:flex; justify-content:space-between; align-items:center;
-    }
-    .table-top h2 { font-size:1rem; font-weight:600; }
-    .search-input {
-      background:var(--surface2); border:1px solid var(--border);
-      border-radius:5px; padding:0.5rem 1rem; color:var(--text);
-      font-family:'DM Sans',sans-serif; font-size:0.875rem; outline:none; width:240px;
-    }
-    .search-input:focus { border-color:var(--accent); }
-    .filter-row {
-      display:flex; gap:0.5rem; padding:0.75rem 1.25rem;
-      border-bottom:1px solid var(--border);
-    }
-    .filter-btn {
-      padding:4px 14px; border-radius:4px; border:1px solid var(--border);
-      background:transparent; color:var(--muted); font-size:0.78rem; cursor:pointer;
-      font-family:'DM Sans',sans-serif; transition:all 0.2s;
-    }
-    .filter-btn.active { background:rgba(232,196,74,0.1); border-color:rgba(232,196,74,0.4); color:var(--accent); }
-    table { width:100%; border-collapse:collapse; }
-    th {
-      padding:0.75rem 1rem; text-align:left; font-size:0.7rem;
-      text-transform:uppercase; letter-spacing:1px; color:var(--muted);
-      border-bottom:1px solid var(--border);
-    }
-    td { padding:0.9rem 1rem; font-size:0.875rem; border-bottom:1px solid rgba(30,37,48,0.5); vertical-align:middle; }
-    tr:last-child td { border-bottom:none; }
-    tr:hover td { background:rgba(255,255,255,0.015); }
+    .badge{display:inline-block;padding:3px 10px;border-radius:3px;font-size:.72rem;font-weight:600;}
+    .b-nouveau{background:rgba(232,196,74,.1);color:#fcd34d;border:1px solid rgba(232,196,74,.2);}
+    .b-en_cours{background:rgba(59,130,246,.1);color:#60a5fa;border:1px solid rgba(59,130,246,.2);}
+    .b-termine{background:rgba(34,197,94,.1);color:#4ade80;border:1px solid rgba(34,197,94,.2);}
+    .b-annule{background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.2);}
 
-    .badge { display:inline-block; padding:3px 10px; border-radius:3px; font-size:0.72rem; font-weight:600; }
-    .badge-nouveau  { background:rgba(232,196,74,0.1);  color:#fcd34d; border:1px solid rgba(232,196,74,0.2); }
-    .badge-en_cours { background:rgba(59,130,246,0.1);  color:#60a5fa; border:1px solid rgba(59,130,246,0.2); }
-    .badge-termine  { background:rgba(34,197,94,0.1);   color:#4ade80; border:1px solid rgba(34,197,94,0.2); }
-    .badge-annule   { background:rgba(239,68,68,0.1);   color:#f87171; border:1px solid rgba(239,68,68,0.2); }
+    .tb{display:inline-block;padding:2px 8px;border-radius:3px;font-size:.72rem;}
+    .tb-vitrine{background:rgba(59,130,246,.1);color:#60a5fa;}
+    .tb-ecommerce{background:rgba(168,85,247,.1);color:#c084fc;}
+    .tb-landing{background:rgba(34,197,94,.1);color:#4ade80;}
+    .tb-webapp{background:rgba(251,146,60,.1);color:#fb923c;}
+    .tb-autre,.tb-default{background:rgba(100,116,139,.1);color:#94a3b8;}
 
-    .type-badge { display:inline-block; padding:2px 8px; border-radius:3px; font-size:0.72rem; }
-    .tb-vitrine   { background:rgba(59,130,246,0.1);  color:#60a5fa; }
-    .tb-ecommerce { background:rgba(168,85,247,0.1);  color:#c084fc; }
-    .tb-landing   { background:rgba(34,197,94,0.1);   color:#4ade80; }
-    .tb-webapp    { background:rgba(251,146,60,0.1);   color:#fb923c; }
-    .tb-autre     { background:rgba(100,116,139,0.1);  color:#94a3b8; }
+    .ft{display:inline-block;background:rgba(232,196,74,.07);color:var(--accent);padding:1px 7px;border-radius:3px;font-size:.68rem;border:1px solid rgba(232,196,74,.12);margin:1px;}
+    .ab{background:transparent;border:1px solid var(--border);border-radius:3px;color:var(--muted);padding:3px 10px;font-size:.75rem;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+    .ab:hover{border-color:var(--accent);color:var(--text);}
+    .ab.del:hover{border-color:#ef4444;color:#ef4444;}
 
-    .feat-tag { display:inline-block; background:rgba(232,196,74,0.07); color:var(--accent); padding:1px 7px; border-radius:3px; font-size:0.68rem; border:1px solid rgba(232,196,74,0.12); margin:1px; }
+    .empty{text-align:center;padding:4rem;color:var(--muted);}
+    .empty .icon{font-size:2.5rem;margin-bottom:1rem;}
 
-    .action-btn {
-      background:transparent; border:1px solid var(--border); border-radius:3px;
-      color:var(--muted); padding:3px 10px; font-size:0.75rem; cursor:pointer;
-      transition:all 0.2s; font-family:'DM Sans',sans-serif;
-    }
-    .action-btn:hover { border-color:var(--accent); color:var(--text); }
-    .action-btn.del:hover { border-color:#ef4444; color:#ef4444; }
+    /* MODAL */
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center;}
+    .modal.open{display:flex;}
+    .modal-box{background:var(--surface);border:1px solid rgba(232,196,74,.15);border-radius:10px;padding:2rem;width:480px;max-width:90vw;}
+    .modal-title{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:2px;margin-bottom:1.5rem;color:var(--accent);}
+    .dr{display:flex;justify-content:space-between;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid var(--border);}
+    .dr:last-child{border-bottom:none;}
+    .dl{color:var(--muted);font-size:.8rem;}
+    .dv{font-size:.875rem;text-align:right;max-width:280px;}
+    .ma{display:flex;gap:.75rem;margin-top:1.5rem;flex-wrap:wrap;}
 
-    .state-box { text-align:center; padding:4rem; color:var(--muted); }
-    .state-box .icon { font-size:2.5rem; margin-bottom:1rem; }
+    /* NOTIF */
+    .notif{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--surface2);border:1px solid rgba(232,196,74,.2);border-radius:6px;padding:.75rem 1.5rem;font-size:.875rem;display:none;z-index:999;white-space:nowrap;}
 
-    /* ── MODAL ── */
-    .modal { position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:200; display:none; align-items:center; justify-content:center; }
-    .modal.open { display:flex; }
-    .modal-box { background:var(--surface); border:1px solid rgba(232,196,74,0.15); border-radius:10px; padding:2rem; width:480px; max-width:90vw; }
-    .modal-title { font-family:'Bebas Neue',sans-serif; font-size:1.5rem; letter-spacing:2px; margin-bottom:1.5rem; color:var(--accent); }
-    .detail-row { display:flex; justify-content:space-between; align-items:flex-start; padding:0.75rem 0; border-bottom:1px solid var(--border); }
-    .detail-row:last-child { border-bottom:none; }
-    .detail-label { color:var(--muted); font-size:0.8rem; }
-    .detail-val { font-size:0.875rem; text-align:right; max-width:280px; }
-    .modal-actions { display:flex; gap:0.75rem; margin-top:1.5rem; flex-wrap:wrap; }
-
-    /* ── NOTIF ── */
-    .notif {
-      position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%);
-      background:var(--surface2); border:1px solid rgba(232,196,74,0.2);
-      border-radius:6px; padding:0.75rem 1.5rem; font-size:0.875rem;
-      display:none; z-index:999; white-space:nowrap;
-    }
-
-    @media (max-width:768px) {
-      .sidebar { display:none; }
-      .main { margin-left:0; }
-      .stats { grid-template-columns:1fr 1fr; }
-    }
+    @media(max-width:768px){.sidebar{display:none;}.main{margin-left:0;}.stats{grid-template-columns:1fr 1fr;}}
   </style>
 </head>
 <body>
 
 <!-- LOGIN -->
-<div id="login-screen">
+<div id="login">
   <div class="login-box">
     <h1>WebCraft MA</h1>
-    <p>Dashboard Administrateur</p>
-    <input type="password" id="pwd-input" placeholder="Mot de passe" />
+    <p>Espace administrateur</p>
+    <input type="password" id="pwd" placeholder="Mot de passe" />
     <button onclick="login()">Connexion →</button>
-    <div class="login-err" id="login-err">Mot de passe incorrect</div>
+    <div class="err" id="err">Mot de passe incorrect</div>
   </div>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard">
+<div id="dash">
   <div class="sidebar">
-    <div class="sidebar-logo">WebCraft <span style="color:var(--muted);font-size:0.7em">MA</span></div>
+    <div class="logo">WebCraft <span style="color:var(--muted);font-size:.7em">MA</span></div>
     <a href="/" class="nav-item">🌐 Site principal</a>
     <a href="#" class="nav-item active">📊 Dashboard</a>
     <div class="nav-bottom">
-      <button class="btn-logout" onclick="logout()">Déconnexion</button>
+      <button class="btn-out" onclick="logout()">Déconnexion</button>
     </div>
   </div>
 
@@ -204,51 +133,32 @@
     <div class="topbar">
       <h1>Tableau de Bord</h1>
       <div class="topbar-actions">
-        <button class="btn btn-ghost" onclick="loadData()">↻ Actualiser</button>
-        <button class="btn btn-accent" onclick="exportCSV()">⬇ CSV</button>
+        <button class="btn btn-gh" onclick="load()">↻ Actualiser</button>
+        <button class="btn btn-ac" onclick="exportCSV()">⬇ CSV</button>
       </div>
     </div>
 
-    <!-- STATS -->
     <div class="stats">
-      <div class="stat-card">
-        <div class="stat-label">Total Demandes</div>
-        <div class="stat-value" id="s-total" style="color:var(--accent)">—</div>
-        <div class="stat-sub">depuis le début</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Nouveaux</div>
-        <div class="stat-value" id="s-new" style="color:#fcd34d">—</div>
-        <div class="stat-sub">en attente</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">En Cours</div>
-        <div class="stat-value" id="s-progress" style="color:#60a5fa">—</div>
-        <div class="stat-sub">projets actifs</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Terminés</div>
-        <div class="stat-value" id="s-done" style="color:#4ade80">—</div>
-        <div class="stat-sub">cette semaine: <span id="s-week">—</span></div>
-      </div>
+      <div class="sc"><div class="sl">Total</div><div class="sv" id="s0" style="color:var(--accent)">—</div><div class="ss">demandes</div></div>
+      <div class="sc"><div class="sl">Nouveaux</div><div class="sv" id="s1" style="color:#fcd34d">—</div><div class="ss">en attente</div></div>
+      <div class="sc"><div class="sl">En Cours</div><div class="sv" id="s2" style="color:#60a5fa">—</div><div class="ss">projets actifs</div></div>
+      <div class="sc"><div class="sl">Terminés</div><div class="sv" id="s3" style="color:#4ade80">—</div><div class="ss">cette semaine: <span id="s4">—</span></div></div>
     </div>
 
-    <!-- TABLE -->
-    <div class="table-card">
-      <div class="table-top">
+    <div class="tc">
+      <div class="tt">
         <h2>Demandes de Projets</h2>
-        <input class="search-input" id="search" placeholder="🔍 Rechercher nom, email..."
-          oninput="renderTable()" />
+        <input class="search" id="search" placeholder="🔍 Nom, email, type..." oninput="render()" />
       </div>
-      <div class="filter-row">
-        <button class="filter-btn active" onclick="setFilter('all',this)">Tous</button>
-        <button class="filter-btn" onclick="setFilter('nouveau',this)">🟡 Nouveau</button>
-        <button class="filter-btn" onclick="setFilter('en_cours',this)">🔵 En cours</button>
-        <button class="filter-btn" onclick="setFilter('termine',this)">🟢 Terminé</button>
-        <button class="filter-btn" onclick="setFilter('annule',this)">🔴 Annulé</button>
+      <div class="fr">
+        <button class="fb active" onclick="setF('all',this)">Tous</button>
+        <button class="fb" onclick="setF('nouveau',this)">🟡 Nouveau</button>
+        <button class="fb" onclick="setF('en_cours',this)">🔵 En cours</button>
+        <button class="fb" onclick="setF('termine',this)">🟢 Terminé</button>
+        <button class="fb" onclick="setF('annule',this)">🔴 Annulé</button>
       </div>
-      <div id="table-container">
-        <div class="state-box"><div class="icon">⏳</div><p>Chargement...</p></div>
+      <div id="tbody-wrap">
+        <div class="empty"><div class="icon">⏳</div><p>Chargement...</p></div>
       </div>
     </div>
   </div>
@@ -258,12 +168,12 @@
 <div class="modal" id="modal">
   <div class="modal-box">
     <div class="modal-title">Détails du Projet</div>
-    <div id="modal-body"></div>
-    <div class="modal-actions">
-      <button class="btn btn-accent" onclick="updateStatus(currentId,'en_cours')">🔵 En cours</button>
-      <button class="btn btn-ghost" onclick="updateStatus(currentId,'termine')">🟢 Terminé</button>
-      <button class="btn btn-ghost" onclick="updateStatus(currentId,'annule')">🔴 Annuler</button>
-      <button class="btn btn-ghost" onclick="closeModal()">Fermer</button>
+    <div id="mbody"></div>
+    <div class="ma">
+      <button class="btn btn-ac" onclick="upd(cid,'en_cours')">🔵 En cours</button>
+      <button class="btn btn-gh" onclick="upd(cid,'termine')">🟢 Terminé</button>
+      <button class="btn btn-gh" onclick="upd(cid,'annule')">🔴 Annuler</button>
+      <button class="btn btn-gh" onclick="closeM()">Fermer</button>
     </div>
   </div>
 </div>
@@ -271,165 +181,135 @@
 <div class="notif" id="notif"></div>
 
 <script>
-  const ADMIN_PASSWORD = 'admin123'; // ← Changez ce mot de passe!
-  let allData = [], currentFilter = 'all', currentId = null;
+  const PWD = 'admin123'; // ← Changez ce mot de passe !
+  let data = [], filter = 'all', cid = null;
 
-  // ── AUTH ──
   function login() {
-    if (document.getElementById('pwd-input').value === ADMIN_PASSWORD) {
-      document.getElementById('login-screen').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      loadData();
+    if (document.getElementById('pwd').value === PWD) {
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('dash').style.display = 'block';
+      load();
     } else {
-      document.getElementById('login-err').style.display = 'block';
+      document.getElementById('err').style.display = 'block';
     }
   }
   document.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && document.getElementById('login-screen').style.display !== 'none') login();
+    if (e.key === 'Enter' && document.getElementById('login').style.display !== 'none') login();
   });
   function logout() {
-    document.getElementById('login-screen').style.display = 'flex';
-    document.getElementById('dashboard').style.display = 'none';
-    document.getElementById('pwd-input').value = '';
+    document.getElementById('login').style.display = 'flex';
+    document.getElementById('dash').style.display = 'none';
+    document.getElementById('pwd').value = '';
   }
 
-  // ── LOAD ──
-  async function loadData() {
+  async function load() {
     try {
       const res = await fetch('/api/requests');
-      allData = await res.json();
-      updateStats();
-      renderTable();
+      data = await res.json();
+      stats(); render();
     } catch {
-      document.getElementById('table-container').innerHTML =
-        '<div class="state-box"><div class="icon">⚠️</div><p>Impossible de se connecter au serveur.<br><small>Vérifiez que <code>node server.js</code> est lancé.</small></p></div>';
+      document.getElementById('tbody-wrap').innerHTML =
+        '<div class="empty"><div class="icon">⚠️</div><p>Impossible de se connecter.<br><small>Vérifiez les variables SUPABASE dans Vercel.</small></p></div>';
     }
   }
 
-  // ── STATS ──
-  function updateStats() {
-    const weekAgo = new Date(Date.now() - 7*24*3600*1000);
-    document.getElementById('s-total').textContent    = allData.length;
-    document.getElementById('s-new').textContent      = allData.filter(d => d.statut === 'nouveau').length;
-    document.getElementById('s-progress').textContent = allData.filter(d => d.statut === 'en_cours').length;
-    document.getElementById('s-done').textContent     = allData.filter(d => d.statut === 'termine').length;
-    document.getElementById('s-week').textContent     = allData.filter(d => new Date(d.created_at) > weekAgo).length;
+  function stats() {
+    const w = new Date(Date.now() - 7*24*3600*1000);
+    document.getElementById('s0').textContent = data.length;
+    document.getElementById('s1').textContent = data.filter(d=>d.statut==='nouveau').length;
+    document.getElementById('s2').textContent = data.filter(d=>d.statut==='en_cours').length;
+    document.getElementById('s3').textContent = data.filter(d=>d.statut==='termine').length;
+    document.getElementById('s4').textContent = data.filter(d=>new Date(d.created_at)>w).length;
   }
 
-  // ── RENDER TABLE ──
-  function renderTable() {
+  function render() {
     const q = document.getElementById('search').value.toLowerCase();
-    const data = allData.filter(d => {
-      const matchSearch = !q || JSON.stringify(d).toLowerCase().includes(q);
-      const matchFilter = currentFilter === 'all' || d.statut === currentFilter;
-      return matchSearch && matchFilter;
+    const rows = data.filter(d => {
+      if (filter !== 'all' && d.statut !== filter) return false;
+      if (q && !JSON.stringify(d).toLowerCase().includes(q)) return false;
+      return true;
     });
-
-    if (!data.length) {
-      document.getElementById('table-container').innerHTML =
-        '<div class="state-box"><div class="icon">📭</div><p>Aucune demande.</p></div>';
+    if (!rows.length) {
+      document.getElementById('tbody-wrap').innerHTML = '<div class="empty"><div class="icon">📭</div><p>Aucune demande.</p></div>';
       return;
     }
-
-    const rows = data.map(d => `
-      <tr>
-        <td>
-          <strong>${d.name}</strong><br>
-          <small style="color:var(--muted)">📞 ${d.phone}</small><br>
-          <small style="color:var(--muted)">✉️ ${d.email}</small>
-        </td>
-        <td><span class="type-badge tb-${d.siteType || 'autre'}">${d.siteType || '—'}</span></td>
-        <td style="color:var(--muted);font-size:0.82rem">${d.budget || '—'}</td>
-        <td>${(d.features||[]).map(f=>`<span class="feat-tag">${f}</span>`).join('') || '<span style="color:var(--muted)">—</span>'}</td>
-        <td><span class="badge badge-${d.statut || 'nouveau'}">${d.statut || 'nouveau'}</span></td>
-        <td style="color:var(--muted);font-size:0.8rem">${fmtDate(d.created_at)}</td>
-        <td>
-          <button class="action-btn" onclick="showDetail(${d.id})">Détails</button>
-          <button class="action-btn del" onclick="deleteRecord(${d.id})">✕</button>
-        </td>
-      </tr>`).join('');
-
-    document.getElementById('table-container').innerHTML = `
+    const tc = t => ['vitrine','ecommerce','landing','webapp'].includes(t) ? t : 'default';
+    document.getElementById('tbody-wrap').innerHTML = `
       <table>
-        <thead><tr>
-          <th>Client</th><th>Type</th><th>Budget</th><th>Features</th><th>Statut</th><th>Date</th><th></th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
+        <thead><tr><th>Client</th><th>Type</th><th>Budget</th><th>Features</th><th>Statut</th><th>Date</th><th></th></tr></thead>
+        <tbody>${rows.map(d=>`
+          <tr>
+            <td><strong>${d.name}</strong><br><small style="color:var(--muted)">📞 ${d.phone}</small><br><small style="color:var(--muted)">✉️ ${d.email}</small></td>
+            <td><span class="tb tb-${tc(d.site_type)}">${d.site_type||'—'}</span></td>
+            <td style="color:var(--muted);font-size:.82rem">${d.budget||'—'}</td>
+            <td>${(d.features||[]).map(f=>`<span class="ft">${f}</span>`).join('')||'<span style="color:var(--muted)">—</span>'}</td>
+            <td><span class="badge b-${d.statut||'nouveau'}">${d.statut||'nouveau'}</span></td>
+            <td style="color:var(--muted);font-size:.8rem">${fmt(d.created_at)}</td>
+            <td>
+              <button class="ab" onclick="detail(${d.id})">Détails</button>
+              <button class="ab del" onclick="del(${d.id})">✕</button>
+            </td>
+          </tr>`).join('')}
+        </tbody>
       </table>`;
   }
 
-  function setFilter(f, btn) {
-    currentFilter = f;
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  function setF(f, btn) {
+    filter = f;
+    document.querySelectorAll('.fb').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    renderTable();
+    render();
   }
 
-  // ── DETAIL MODAL ──
-  function showDetail(id) {
-    currentId = id;
-    const d = allData.find(x => x.id === id);
+  function detail(id) {
+    cid = id;
+    const d = data.find(x => x.id === id);
     if (!d) return;
-    document.getElementById('modal-body').innerHTML = `
-      <div class="detail-row"><span class="detail-label">Nom</span><span class="detail-val">${d.name}</span></div>
-      <div class="detail-row"><span class="detail-label">Téléphone</span><span class="detail-val">${d.phone}</span></div>
-      <div class="detail-row"><span class="detail-label">Email</span><span class="detail-val">${d.email}</span></div>
-      <div class="detail-row"><span class="detail-label">Type de site</span><span class="detail-val">${d.siteType}</span></div>
-      <div class="detail-row"><span class="detail-label">Budget</span><span class="detail-val">${d.budget || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Features</span><span class="detail-val">${(d.features||[]).join(', ') || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Description</span><span class="detail-val">${d.description || '—'}</span></div>
-      <div class="detail-row"><span class="detail-label">Statut</span><span class="detail-val"><span class="badge badge-${d.statut}">${d.statut}</span></span></div>
-      <div class="detail-row"><span class="detail-label">Date</span><span class="detail-val">${new Date(d.created_at).toLocaleString('fr-MA')}</span></div>
-    `;
+    document.getElementById('mbody').innerHTML = [
+      ['Nom', d.name], ['Téléphone', d.phone], ['Email', d.email],
+      ['Type', d.site_type], ['Budget', d.budget||'—'],
+      ['Features', (d.features||[]).join(', ')||'—'],
+      ['Description', d.description||'—'],
+      ['Statut', `<span class="badge b-${d.statut}">${d.statut}</span>`],
+      ['Date', new Date(d.created_at).toLocaleString('fr-MA')],
+    ].map(([l,v])=>`<div class="dr"><span class="dl">${l}</span><span class="dv">${v}</span></div>`).join('');
     document.getElementById('modal').classList.add('open');
   }
-  function closeModal() {
-    document.getElementById('modal').classList.remove('open');
-    currentId = null;
-  }
+  function closeM() { document.getElementById('modal').classList.remove('open'); cid = null; }
 
-  // ── UPDATE STATUS ──
-  async function updateStatus(id, statut) {
+  async function upd(id, statut) {
     try {
-      await fetch(`/api/requests/${id}`, {
+      await fetch(`/api/requests?id=${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ statut }),
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({statut}),
       });
-      notify(`✅ Statut mis à jour : ${statut}`);
-      closeModal();
-      loadData();
-    } catch { notify('❌ Erreur de mise à jour'); }
+      notify(`✅ Statut: ${statut}`);
+      closeM(); load();
+    } catch { notify('❌ Erreur'); }
   }
 
-  // ── DELETE ──
-  async function deleteRecord(id) {
+  async function del(id) {
     if (!confirm('Supprimer cette demande ?')) return;
     try {
-      await fetch(`/api/requests/${id}`, { method: 'DELETE' });
-      notify('🗑 Demande supprimée');
-      loadData();
-    } catch { notify('❌ Erreur de suppression'); }
+      await fetch(`/api/requests?id=${id}`, { method: 'DELETE' });
+      notify('🗑 Supprimé');
+      load();
+    } catch { notify('❌ Erreur'); }
   }
 
-  // ── EXPORT CSV ──
   function exportCSV() {
-    const headers = ['ID','Nom','Téléphone','Email','Type','Budget','Features','Description','Statut','Date'];
-    const rows = allData.map(d => [
-      d.id, d.name, d.phone, d.email, d.siteType, d.budget,
-      (d.features||[]).join('|'), d.description?.replace(/,/g,' '), d.statut, d.created_at
-    ].join(','));
-    const csv = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+    const h = ['ID','Nom','Téléphone','Email','Type','Budget','Features','Description','Statut','Date'];
+    const rows = data.map(d=>[d.id,d.name,d.phone,d.email,d.site_type,d.budget,(d.features||[]).join('|'),(d.description||'').replace(/,/g,' '),d.statut,d.created_at].join(','));
     const a = document.createElement('a');
-    a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent([h.join(','),...rows].join('\n'));
     a.download = 'webcraft_demandes.csv';
     a.click();
   }
 
-  // ── HELPERS ──
-  function fmtDate(iso) {
+  function fmt(iso) {
     if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('fr-MA', { day:'2-digit', month:'short', year:'numeric' });
+    return new Date(iso).toLocaleDateString('fr-MA',{day:'2-digit',month:'short',year:'numeric'});
   }
   function notify(msg) {
     const n = document.getElementById('notif');
@@ -437,9 +317,8 @@
     setTimeout(() => n.style.display = 'none', 3000);
   }
 
-  // Auto-refresh kull 60s
   setInterval(() => {
-    if (document.getElementById('dashboard').style.display !== 'none') loadData();
+    if (document.getElementById('dash').style.display !== 'none') load();
   }, 60000);
 </script>
 </body>
