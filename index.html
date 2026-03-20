@@ -456,9 +456,22 @@
       </div>
 
       <div>
+        <!-- Hidden form for Netlify to detect at build time -->
+        <form name="demande-projet" data-netlify="true" netlify-honeypot="bot-field" hidden>
+          <input type="text" name="name" />
+          <input type="tel" name="phone" />
+          <input type="email" name="email" />
+          <select name="siteType"></select>
+          <select name="budget"></select>
+          <input type="text" name="features" />
+          <textarea name="description"></textarea>
+        </form>
+
         <form id="requestForm">
+          <input type="hidden" name="form-name" value="demande-projet" />
+          <input type="hidden" name="bot-field" style="display:none" />
           <div class="form-row">
-            <label>Votre Nom <input type="text" name="name" placeholder="Ahmed taouil" required /></label>
+            <label>Votre Nom <input type="text" name="name" placeholder="Ahmed Benali" required /></label>
             <label>Téléphone / WhatsApp <input type="tel" name="phone" placeholder="+212 6XX XXX XXX" required /></label>
           </div>
           <label>Email <input type="email" name="email" placeholder="ahmed@email.com" required /></label>
@@ -477,22 +490,22 @@
             Budget estimé
             <select name="budget">
               <option value="">-- Choisissez --</option>
-              <option value="<1500">Moins de 1 500 MAD</option>
+              <option value="moins-1500">Moins de 1 500 MAD</option>
               <option value="1500-3000">1 500 – 3 000 MAD</option>
               <option value="3000-6000">3 000 – 6 000 MAD</option>
-              <option value=">6000">Plus de 6 000 MAD</option>
+              <option value="plus-6000">Plus de 6 000 MAD</option>
               <option value="nsp">Je ne sais pas encore</option>
             </select>
           </label>
           <label>
             Fonctionnalités souhaitées
             <div class="checkbox-group">
-              <label class="checkbox-item"><input type="checkbox" name="features" value="multilangue" /> 🌍 Multilingue</label>
-              <label class="checkbox-item"><input type="checkbox" name="features" value="blog" /> 📝 Blog</label>
-              <label class="checkbox-item"><input type="checkbox" name="features" value="contact" /> 📧 Formulaire contact</label>
-              <label class="checkbox-item"><input type="checkbox" name="features" value="seo" /> 🔍 SEO</label>
-              <label class="checkbox-item"><input type="checkbox" name="features" value="admin" /> 🔧 Panel admin</label>
-              <label class="checkbox-item"><input type="checkbox" name="features" value="paiement" /> 💳 Paiement en ligne</label>
+              <label class="checkbox-item"><input type="checkbox" name="feat_multilangue" value="oui" /> 🌍 Multilingue</label>
+              <label class="checkbox-item"><input type="checkbox" name="feat_blog" value="oui" /> 📝 Blog</label>
+              <label class="checkbox-item"><input type="checkbox" name="feat_contact" value="oui" /> 📧 Formulaire contact</label>
+              <label class="checkbox-item"><input type="checkbox" name="feat_seo" value="oui" /> 🔍 SEO</label>
+              <label class="checkbox-item"><input type="checkbox" name="feat_admin" value="oui" /> 🔧 Panel admin</label>
+              <label class="checkbox-item"><input type="checkbox" name="feat_paiement" value="oui" /> 💳 Paiement en ligne</label>
             </div>
           </label>
           <label>
@@ -532,34 +545,25 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Envoi en cours...';
 
-      const features = [...form.querySelectorAll('input[name="features"]:checked')]
-        .map(cb => cb.value);
-
-      const data = {
-        name: form.name.value,
-        phone: form.phone.value,
-        email: form.email.value,
-        siteType: form.siteType.value,
-        budget: form.budget.value,
-        features,
-        description: form.description.value,
-      };
-
       try {
-        const res = await fetch('/api/requests', {
+        // Encode all form fields for Netlify Forms
+        const formData = new FormData(form);
+        const encoded = new URLSearchParams(formData).toString();
+
+        const res = await fetch('/', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: encoded,
         });
 
         if (res.ok) {
           form.style.display = 'none';
           successMsg.style.display = 'block';
         } else {
-          throw new Error('Server error');
+          throw new Error('Netlify form error');
         }
       } catch (err) {
-        alert('Erreur lors de l\'envoi. Vérifiez que le serveur est démarré.');
+        alert('Erreur lors de l\'envoi. Réessayez ou contactez-nous directement.');
         submitBtn.disabled = false;
         submitBtn.textContent = 'Envoyer Ma Demande →';
       }
