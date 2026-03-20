@@ -1,114 +1,147 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const { randomUUID } = require('crypto');
+/**
+ * WebCraft MA – Backend Server
+ * Node.js + Express + SQLite (better-sqlite3)
+ * Même approche que AM Academy ✅
+ *
+ * Démarrer: node server.js
+ * Port:     http://localhost:3000
+ */
 
-const app = express();
+const express  = require('express');
+const Database = require('better-sqlite3');
+const path     = require('path');
+const cors     = require('cors');
+
+const app  = express();
 const PORT = process.env.PORT || 3000;
-const DB_FILE = path.join(__dirname, 'requests.json');
 
-// ─── MIDDLEWARE ────────────────────────────────────────
+// ── MIDDLEWARE ──────────────────────────────────────────────
+app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname)); // Sert les fichiers HTML/CSS/JS
+app.use(express.static(__dirname));
 
-// ─── HELPERS ──────────────────────────────────────────
-function readDB() {
-  if (!fs.existsSync(DB_FILE)) return [];
-  const raw = fs.readFileSync(DB_FILE, 'utf-8');
-  try { return JSON.parse(raw); } catch { return []; }
-}
+// ── DATABASE SETUP ──────────────────────────────────────────
+const db = new Database('./webcraft.db');
+db.pragma('journal_mode = WAL');
 
-function writeDB(data) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
-}
+db.exec(`
+  CREATE TABLE IF NOT EXISTS requests (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    name        TEXT    NOT NULL,
+    phone       TEXT    NOT NULL,
+    email       TEXT    NOT NULL,
+    siteType    TEXT    NOT NULL,
+    budget      TEXT,
+    features    TEXT    DEFAULT '[]',
+    description TEXT,
+    statut      TEXT    DEFAULT 'nouveau',
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+`);
 
-// ─── ROUTES ───────────────────────────────────────────
+console.log('✅ Base de données initialisée: webcraft.db');
 
-// GET /api/requests — Récupérer toutes les demandes (admin)
+// ── ROUTES ─────────────────────────────────────────────────
+
+// GET toutes les demandes
 app.get('/api/requests', (req, res) => {
-  const requests = readDB();
-  // Trier par date décroissante (plus récent en premier)
-  requests.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  res.json(requests);
+  try {
+    const rows = db.prepare('SELECT * FROM requests ORDER BY created_at DESC').all();
+    // Parse features JSON
+    const data = rows.map(r => ({ ...r, features: JSON.parse(r.features || '[]') }));
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
-// POST /api/requests — Soumettre une nouvelle demande (client)
+// POST nouvelle demande (depuis le formulaire client)
 app.post('/api/requests', (req, res) => {
-  const { name, phone, email, siteType, budget, features, description } = req.body;
+  try {
+    const { name, phone, email, siteType, budget, features, description } = req.body;
 
-  // Validation basique
-  if (!name || !phone || !email || !siteType) {
-    return res.status(400).json({ error: 'Champs obligatoires manquants.' });
+    if (!name || !phone || !email || !siteType) {
+      return res.status(400).json({ error: 'Champs obligatoires manquants.' });
+    }
+
+    const stmt = db.prepare(`
+      INSERT INTO requests (name, phone, email, siteType, budget, features, description)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `);
+    const result = stmt.run(
+      name.trim(),
+      phone.trim(),
+      email.trim().toLowerCase(),
+      siteType,
+      budget || '',
+      JSON.stringify(Array.isArray(features) ? features : []),
+      (description || '').trim()
+    );
+
+    const newRow = db.prepare('SELECT * FROM requests WHERE id = ?').get(result.lastInsertRowid);
+    console.log(`[NOUVELLE DEMANDE] ${name} — ${siteType} — ${new Date().toLocaleString('fr-MA')}`);
+    res.status(201).json({ success: true, data: { ...newRow, features: JSON.parse(newRow.features) } });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  const newRequest = {
-    id: randomUUID(),
-    name: name.trim(),
-    phone: phone.trim(),
-    email: email.trim().toLowerCase(),
-    siteType,
-    budget: budget || '',
-    features: Array.isArray(features) ? features : [],
-    description: (description || '').trim(),
-    status: 'nouveau',
-    createdAt: new Date().toISOString(),
-  };
-
-  const requests = readDB();
-  requests.push(newRequest);
-  writeDB(requests);
-
-  console.log(`[${new Date().toLocaleString('fr-MA')}] Nouvelle demande: ${name} — ${siteType}`);
-  res.status(201).json({ success: true, id: newRequest.id });
 });
 
-// PATCH /api/requests/:id — Mettre à jour le statut (admin)
+// PATCH update statut (depuis dashboard admin)
 app.patch('/api/requests/:id', (req, res) => {
-  const { id } = req.params;
-  const { status } = req.body;
-  const validStatuses = ['nouveau', 'en_cours', 'termine', 'annule'];
-
-  if (!validStatuses.includes(status)) {
-    return res.status(400).json({ error: 'Statut invalide.' });
+  try {
+    const { statut } = req.body;
+    const valid = ['nouveau', 'en_cours', 'termine', 'annule'];
+    if (!valid.includes(statut)) {
+      return res.status(400).json({ error: 'Statut invalide.' });
+    }
+    db.prepare(`
+      UPDATE requests SET statut = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?
+    `).run(statut, req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  const requests = readDB();
-  const index = requests.findIndex(r => r.id === id);
-
-  if (index === -1) {
-    return res.status(404).json({ error: 'Demande introuvable.' });
-  }
-
-  requests[index].status = status;
-  requests[index].updatedAt = new Date().toISOString();
-  writeDB(requests);
-
-  console.log(`[${new Date().toLocaleString('fr-MA')}] Statut mis à jour: ${id} → ${status}`);
-  res.json({ success: true });
 });
 
-// DELETE /api/requests/:id — Supprimer une demande (admin)
+// DELETE une demande
 app.delete('/api/requests/:id', (req, res) => {
-  const { id } = req.params;
-  let requests = readDB();
-  const before = requests.length;
-  requests = requests.filter(r => r.id !== id);
-
-  if (requests.length === before) {
-    return res.status(404).json({ error: 'Demande introuvable.' });
+  try {
+    db.prepare('DELETE FROM requests WHERE id = ?').run(req.params.id);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  writeDB(requests);
-  console.log(`[${new Date().toLocaleString('fr-MA')}] Demande supprimée: ${id}`);
-  res.json({ success: true });
 });
 
-// ─── START ────────────────────────────────────────────
+// GET stats
+app.get('/api/stats', (req, res) => {
+  try {
+    const total    = db.prepare("SELECT COUNT(*) as n FROM requests").get().n;
+    const nouveau  = db.prepare("SELECT COUNT(*) as n FROM requests WHERE statut='nouveau'").get().n;
+    const en_cours = db.prepare("SELECT COUNT(*) as n FROM requests WHERE statut='en_cours'").get().n;
+    const termine  = db.prepare("SELECT COUNT(*) as n FROM requests WHERE statut='termine'").get().n;
+    const weekAgo  = new Date(Date.now() - 7*24*3600*1000).toISOString();
+    const semaine  = db.prepare('SELECT COUNT(*) as n FROM requests WHERE created_at >= ?').get(weekAgo).n;
+    res.json({ total, nouveau, en_cours, termine, semaine });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Serve index.html pour toutes les autres routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// ── START ───────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log('\n╔══════════════════════════════════╗');
-  console.log('║     WebCraft MA — Serveur        ║');
-  console.log('╠══════════════════════════════════╣');
-  console.log(`║  ✅  http://localhost:${PORT}        ║`);
-  console.log(`║  🔒  http://localhost:${PORT}/admin  ║`);
-  console.log('╚══════════════════════════════════╝\n');
+  console.log(`
+╔══════════════════════════════════════╗
+║   🌐 WebCraft MA — Serveur           ║
+║   http://localhost:${PORT}              ║
+║   Admin: http://localhost:${PORT}/admin ║
+╚══════════════════════════════════════╝
+  `);
 });
